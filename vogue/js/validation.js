@@ -323,7 +323,7 @@ form.logF input[type=password]`;
 
   $("#btnj").click((e) => {
     // 1. 기본이동(서브밋) 막기
-    // e.preventDefault();
+    e.preventDefault();
 
     // 2. pass통과 여부 변수에 true할당하기
     pass = true;
@@ -333,13 +333,63 @@ form.logF input[type=password]`;
     console.log("통과여부:", pass);
     // 4. 검사결과에 따라 메시지 보이기
     if (pass) {
-      alert("회원가입을 축하드립니다! 짝짝짝!");
-      // 원래는 POST방식으로 DB에 회원가입정보를
-      // 전송하여 입력후 DB처리완료시 성공메시지나
-      // 로그인 페이지로 넘겨준다! 그런데 개별 페이지가 아닌
-      // 리액트 SPA방식이므로 일반적인 페이지 이동이 불가하다
-      // -> 리액트 페이지 변경에 사용하는 상태변수를 업데이트하여 페이지 이동을 해야함
-      // changeMenu("login");
+    
+      // 메서드로 서브밋하기 -> 동기적 처리(그페이질 ㅗ이동함)
+      // $(".logF").submit();
+
+      /* 
+        [ Ajax를 이용한 POST방식으로 DB에
+        데이터 입력하기 ]
+
+        AJAX = Asyncronous Javascript and XML
+
+        - 비동기통신이란? 쉽게 말해서 페이지가
+        새로고쳐지지 않고 그대로 있으면서 일부분만
+        서버통신을 하는 것을 말한다!
+        - 제이쿼리는 POST방식으로 ajax를 처리하는
+        메서드를 제공한다!
+
+        [ POST방식 Ajax 메서드 ]
+        $.post(URL,data,callback)
+        $.post(전송할페이지,전송할데이터,전송후콜백함수)
+          
+      */
+
+      $.post(
+        // 1. 전송할 페이지
+        "process/ins.php",
+        // 2. 전송할데이터 : 객체로 보냄
+        {
+          mid: $("#mid").val(),
+          // 2.비번
+          mpw: $("#mpw").val(),
+          // 3.이름
+          mnm: $("#mnm").val(),
+          // 4.성별 : 라디오태그에 value속성필수!
+          gen: $(":radio[name=gen]:checked").val(),
+          // 5-1.이메일 앞주소
+          email1: $("#email1").val(),
+          // 5-2.이메일 뒷주소
+          seleml: $("#seleml").val(),
+          // 5-3.직접입력 이메일 뒷주소
+          email2: $("#email2").val(),
+        },
+        // 3. 전송후콜백함수
+        function (res) {// res - 백엔드 ins.php의 리턴값
+          console.log("서버리턴값",res);
+          // 1. 서버리턴값이 ok이면 성공
+          if (res == "ok") {
+            alert("회원가입을 축하드립니다! 짝짝짝!");
+            // 리액트 메뉴변경 상태변수 업데이트로 페이지 이동
+            changeMenu("login");
+          }else{
+            // 서버 리턴값이 ok가 아니면 실패
+            alert("회원가입 실패"+ res);
+          }
+
+        } //// 콜백함수 //////
+      );// 제이쿼리 post메서드 //
+
     } //////// if : 통과시 ///////////
     else {
       ///// 불통과시 //////
