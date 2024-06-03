@@ -91,9 +91,76 @@ form.logF input[type=password]`;
         // '이미 사용중인 아이디입니다' 와 같은 메시지출력
         // 2. 만약 DB조회하여 같은 아이다가 없다면
         // '멋진 아이디네요~!'와 같은 메시지출력
-        // 여기서 우선은 DB조회 못하므로 통과시 메시지로 출력
-        $(this).siblings(".msg").text("사용할 수 있는 아이디").addClass("on");
-        // 클래스 on을 넣으면 녹색글자
+
+        /* 
+          [ Ajax로 중복아이디 검사하기! ]
+          ajax 처리 유형 2가지
+
+          1) post 방식 처리 메서드
+          - $.post(URL,data,callback)
+
+          2) get 방식 처리 메서드
+          - $.get(URL,callback)
+          -> get방식은 URL로 키=값 형식으로 데이터전송함!
+
+          3) 위의 2가지 유형 중 처리선택 메서드
+          - $.ajax({
+              전송할페이지,
+              전송방식,
+              보낼데이터,
+              전송할데이터타입,
+              비동기옵션,
+              성공처리,
+              실패처리
+          })
+          -> 보내는 값은 하나(객체데이터)
+          -> 객체안에 7가지 유형의 데이터를 보냄!
+        */
+        $.ajax({
+          // 1.전송할페이지(url)
+          url: "./process/chkID.php",
+          // 2.전송방식(type)
+          type: "post",
+          // 3.보낼데이터(data)
+          data: { mid: $("#mid").val() },
+          // 4.전송할데이터타입(dataType)
+          dataType: "html",
+          // 5.비동기옵션(async)
+          async: false,
+          // -> pass변수 업데이트를 동기적으로
+          // 처리하기 위해 비동기옵션을 false로
+          // 처리해야한다!
+          // 6.성공처리(success)
+          success: function (res) {
+            // res - 리턴된 결과값
+            if (res == "ok") {
+              // 아이디중복 통과시
+              $("#mid")
+                .siblings(".msg")
+                .text("사용할수 있는 아이디!")
+                .addClass("on");
+              // 클래스 on을 넣으면 녹색글자임!
+            } /// if ///
+            // 아이디 중복일 경우
+            else {
+              $("#mid")
+                .siblings(".msg")
+                .text("이미 사용중인 아이디입니다")
+                .removeClass("on");
+
+              // [불통과 pass변수 업데이트!]
+              pass = false;
+              console.log("중복ID pass:", pass);
+            } /// else ///
+          },
+          // 7. 실패처리(error),
+          // xhr - XMLHttpRequest객체
+          // status - 실패상태코드
+          // error - 에러결과값
+          error: function (xhr, status, error) {
+            alert("연결처리실패:" + error);
+          }, // 에러
+        });
       }
     } /// else if ////
     /**************************************** 
@@ -333,7 +400,6 @@ form.logF input[type=password]`;
     console.log("통과여부:", pass);
     // 4. 검사결과에 따라 메시지 보이기
     if (pass) {
-    
       // 메서드로 서브밋하기 -> 동기적 처리(그페이질 ㅗ이동함)
       // $(".logF").submit();
 
@@ -375,21 +441,20 @@ form.logF input[type=password]`;
           email2: $("#email2").val(),
         },
         // 3. 전송후콜백함수
-        function (res) {// res - 백엔드 ins.php의 리턴값
-          console.log("서버리턴값",res);
+        function (res) {
+          // res - 백엔드 ins.php의 리턴값
+          console.log("서버리턴값", res);
           // 1. 서버리턴값이 ok이면 성공
           if (res == "ok") {
             alert("회원가입을 축하드립니다! 짝짝짝!");
             // 리액트 메뉴변경 상태변수 업데이트로 페이지 이동
             changeMenu("login");
-          }else{
+          } else {
             // 서버 리턴값이 ok가 아니면 실패
-            alert("회원가입 실패"+ res);
+            alert("회원가입 실패" + res);
           }
-
         } //// 콜백함수 //////
-      );// 제이쿼리 post메서드 //
-
+      ); // 제이쿼리 post메서드 //
     } //////// if : 통과시 ///////////
     else {
       ///// 불통과시 //////

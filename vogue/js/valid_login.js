@@ -36,9 +36,42 @@ export default function validateLogin(changeMenu) {
       // -> '비밀번호가 일치하지 않습니다'
       // 3. 로그인 성공 : 첫페이지로 이동(로그인표시)
       // -> '로그인에 성공하였습니다!'
-      alert("로그인에 성공하였습니다!");
-      // 리액트 상태관리변수 업데이트로 페이지 이동하기
-      changeMenu("home");
+
+      // DB 조회하여 결과를 받아서 처리하기
+      // Ajax의 post() 메서드 사용
+      // $.post(전송할페이지, 보낼데이터, 콜백함수)
+      $.post(
+        //전송할페이지,
+        "./process/loginSet.php",
+        //보낼데이터,
+        {
+          mid: mid.val(), // 아이디
+          mpw: mpw.val(), // 비밀번호
+        },
+        //콜백함수
+        function (res) {
+          console.log("결과값:", res);
+          // 1. 통과시
+          if (res == "ok") {
+            alert("로그인에 성공하였습니다!");
+            // 리액트 상태관리변수 업데이트로 페이지 이동하기
+            // changeMenu("home");
+          } // if
+          // 2. 비밀번호 불일치
+          else if (res == "again") {
+            alert("비밀번호 불일치");
+            // 서비스로 비밀번호 지우기 비번에 포커스
+            mpw.val("").focus();
+          } // elseif ///
+          // 3. 아이디가 존재하지않음
+          else if (res == "no") {
+            alert("존재하지 않은 아이디");
+            // 서비스로 아이디,비밀번호 지우기 아이디에 포커스
+            mid.val("").focus();
+            mpw.val("");
+          } // elseif ///
+        } /// 결과처리 함수
+      ); /// post 메서드 ////
     } /////// else : 통과시 ////////
   }); ///////// click ///////////
 } //// validateLogin ///////////
