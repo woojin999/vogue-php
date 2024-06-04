@@ -21,9 +21,8 @@ export default function TopArea({ changeMenu }) {
     // 전달값 변경하기 : 소문자, 특수문자
     v = v.toLowerCase();
     // 부모 메뉴 변경 상태메서드로 메뉴변경
-    changeMenu(v)
-
-  }; /// chgMenuFn 함수 //// 
+    changeMenu(v);
+  }; /// chgMenuFn 함수 ////
 
   // 코드 리턴구역 ////
   return (
@@ -50,7 +49,12 @@ export default function TopArea({ changeMenu }) {
               href="#"
               className="fi fi-laptop"
               title="로그인"
-              onClick={() => chgMenuFn("login")}
+              onClick={(e) =>
+                // 로그인일때만 이동처리
+                $(e.currentTarget).find("span").text() == "로그인"
+                  ? chgMenuFn("login")
+                  : ""
+              }
             >
               <span className="ir">로그인</span>
             </a>

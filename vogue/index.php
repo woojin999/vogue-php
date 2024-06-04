@@ -123,12 +123,13 @@
       type="text/babel"
     ></script>
 
+    <!-- 로그인 셋팅 전역함수 불러오기 -->
+    <script src="./js/login_set.js"></script>
+
     
   </head>
   <body>
     <div id="root"></div>
-    <!-- 1.상단영역 -->
-    <!-- 2.메인영역 -->
-    <!-- 3.하단영역 -->
+    <?php include "./include/login_session.php" ?>
   </body>
 </html>

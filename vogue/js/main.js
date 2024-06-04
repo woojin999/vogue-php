@@ -14,6 +14,7 @@ import Gallery from "./components/Gallery";
 import Login from "./components/Login";
 // 회원가입 모듈 불러오기
 import Member from "./components/Member";
+import { useLayoutEffect } from "react";
 
 // [1] 메인 페이지 전체 레이아웃 로딩 컴포넌트 /////
 function Layout() {
@@ -35,14 +36,40 @@ function Layout() {
         : menu == "member"
         ? "./css/member.css"
         : "./css/items.css";
-        
-        // 페이지 최상단이동코드
-        window.scrollTo(0,0)
+
+    // menu값이 :home인 경우 main.css
+    // menu값이 gallery인 경우 gallery.css
+    // menu값이 login인 경우 login.css
+    // 기타 메뉴인경우 items.css
+    // 페이지 최상단이동코드
+    window.scrollTo(0, 0);
   }, [menu]);
-  // menu값이 :home인 경우 main.css
-  // menu값이 gallery인 경우 gallery.css
-  // menu값이 login인 경우 login.css
-  // 기타 메뉴인경우 items.css
+
+  // 로그인시 필요한 사용자 확인 박스 만들기
+  // 처음 화면 랜더링 바로직전 후 한번만 실행코드 구역에 구현
+  React.useLayoutEffect(() => {
+    // 1. 상단영역(#top-area)에 로그인 박스넣기
+    $("#top-area").append('<div id="loginMsg"></div>');
+    // 2. 로그인 박스 CSS 디자인하기
+    $("#loginMsg").css({
+      position: "absolute",
+      width: "400px",
+      top: "5%",
+      left: "50%",
+      transform: "translateX(-50%)",
+      fontSize: "14px",
+      fontWeight: "bold",
+      textAlign: "center",
+      whiteSpace: "nowrap",
+      zIndex: -1,
+    }); ////// css //////////
+  }, []);
+
+  React.useLayoutEffect(() => {
+    // 로그인 처리 함수 호출
+    loginSet(login_msg, login_auth);
+  },[]); // [] <- 처음 한번만 로그인 처리함수 호출
+
   // 코드 리턴구역 /////
   return (
     <React.Fragment>

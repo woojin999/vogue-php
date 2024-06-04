@@ -54,6 +54,8 @@ export default function validateLogin(changeMenu) {
           // 1. 통과시
           if (res == "ok") {
             alert("로그인에 성공하였습니다!");
+            // 전체 페이지의 로그인 상태를 변경해야 하므로 페이지를 이동하여 현재 페이지를 다시 읽는다
+            location.href = "index.php";
             // 리액트 상태관리변수 업데이트로 페이지 이동하기
             // changeMenu("home");
           } // if
