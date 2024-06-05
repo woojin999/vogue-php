@@ -78,8 +78,8 @@ function loginSet(msg, auth) {
     );
 
     // 관리자 페이지 링크설정
-    // $(".sns a")
-    //   .last()
-    //   .click(() => (location.href = "./admin/"));
+    $(".sns a")
+      .last()
+      .click(() => (location.href = "./admin/"));
   } /////////// if /////////////////
 } ////////// loginSet 함수 /////////////////
